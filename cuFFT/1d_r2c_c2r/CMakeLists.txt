@@ -62,15 +62,27 @@ if(CMAKE_CUDA_ARCHITECTURES LESS 60)
   set(CMAKE_CUDA_ARCHITECTURES 60 70 75 80 86)
 endif()
 
-set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
+# set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 set_source_files_properties(${ROUTINE}_example.cpp PROPERTIES LANGUAGE CUDA)
 add_executable(${ROUTINE}_example)
 
 target_include_directories(${ROUTINE}_example
-                           PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES} 
+                           PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES}
                            ${CMAKE_SOURCE_DIR}/../utils)
 
 target_sources(${ROUTINE}_example
                PRIVATE ${PROJECT_SOURCE_DIR}/${ROUTINE}_example.cpp)
 
 target_link_libraries(${ROUTINE}_example PRIVATE CUDA::cufft CUDA::cudart)
+
+set_source_files_properties(async.cu.cpp PROPERTIES LANGUAGE CUDA)
+add_executable(async)
+target_include_directories(async PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+target_sources(async PRIVATE ${PROJECT_SOURCE_DIR}/async.cu.cpp)
+target_link_libraries(async PRIVATE CUDA::cudart)
+
+set_source_files_properties(bandwidth.cu.cpp PROPERTIES LANGUAGE CUDA)
+add_executable(bandwidth)
+target_include_directories(bandwidth PRIVATE ${CMAKE_CUDA_TOOLKIT_INCLUDE_DIRECTORIES})
+target_sources(bandwidth PRIVATE ${PROJECT_SOURCE_DIR}/bandwidth.cu.cpp)
+target_link_libraries(bandwidth PRIVATE CUDA::cudart)
